@@ -14,7 +14,7 @@ pip install --user git+https://github.com/gzj/gui-widgets.git
 
 Using Pipe to Get Data
 
-```
+```shell
 #bash
 echo "a \
 b \
@@ -30,7 +30,7 @@ d" | gk-list.py | ForEach-Object { echo $_ }
 
 Using Arguments to Get Data
 
-```
+```shell
 #bash
 gk-list.py "a \
 b \
