@@ -1,0 +1,3 @@
+[submodule "cntdrun"]
+	path = cntdrun
+	url = git@github.com:GZJ/cntdrun.git
