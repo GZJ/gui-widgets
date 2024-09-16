@@ -1,3 +1,6 @@
 [submodule "cntdrun"]
 	path = cntdrun
 	url = git@github.com:GZJ/cntdrun.git
+[submodule "dnotify"]
+	path = dnotify
+	url = git@github.com:GZJ/dnotify.git
