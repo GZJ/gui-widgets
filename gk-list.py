@@ -1,11 +1,14 @@
 import sys
-from PyQt5.QtCore import Qt, QEvent
+from PyQt5.QtCore import Qt, QEvent, QPoint
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QListWidget, QFrame, QListWidgetItem, QDesktopWidget
 
 class MyWidget(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
+
+        self.dragging = False
+        self.offset = QPoint()
 
     def initUI(self):
         self.setWindowTitle("gk-list") 
@@ -83,12 +86,22 @@ class MyWidget(QWidget):
             self.list_widget.addItem(item)
 
         self.list_widget.installEventFilter(self)
+        self.list_widget.viewport().installEventFilter(self)  # 添加这一行
 
         self.list_widget.setCurrentRow(0)
 
-
     def eventFilter(self, source, event):
-        if event.type() == QEvent.KeyPress:
+        if event.type() == QEvent.MouseButtonPress:
+            if event.button() == Qt.LeftButton:
+                self.dragging = True
+                self.offset = event.pos()
+        elif event.type() == QEvent.MouseMove:
+            if self.dragging:
+                self.move(self.mapToParent(event.pos() - self.offset))
+        elif event.type() == QEvent.MouseButtonRelease:
+            if event.button() == Qt.LeftButton:
+                self.dragging = False
+        elif event.type() == QEvent.KeyPress:
             key = event.key()
             if key == Qt.Key_J:
                 self.move_selection(1)
