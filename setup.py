@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='gui-widgets',
@@ -7,6 +7,7 @@ setup(
     author='gzj',
     author_email='gzj00@outlook.com',
     url='https://github.com/gzj/gui-widgets',
-    scripts=['gk-list.py'],
+    packages=find_packages(where='.', include=['*'], exclude=['*.*']),
+    scripts=['gk-list.py', 'gk-finput.py'],
     install_requires=['PyQt5'],
 )
