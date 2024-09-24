@@ -3,14 +3,15 @@ from PyQt5.QtCore import Qt, QEvent, QPoint
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QListWidget, QFrame, QListWidgetItem, QDesktopWidget
 
 class MyWidget(QWidget):
-    def __init__(self):
+    def __init__(self, x=None, y=None, width=None, height=None, items=None):
         super().__init__()
-        self.initUI()
+        self.initUI(x, y, width, height)
+        self.populate_list(items)
 
         self.dragging = False
         self.offset = QPoint()
 
-    def initUI(self):
+    def initUI(self, x=None, y=None, width=None, height=None):
         self.setWindowTitle("gk-list") 
         self.setWindowFlags(Qt.FramelessWindowHint)
 
@@ -19,11 +20,11 @@ class MyWidget(QWidget):
         screen_width = screen_rect.width()
         screen_height = screen_rect.height()
 
-        window_width = int(screen_width / 3)  
-        window_height = int(screen_height / 3)
+        window_width = width if width is not None else int(screen_width / 3)  
+        window_height = height if height is not None else int(screen_height / 3)
 
-        x = int((screen_width - window_width) / 2)
-        y = int((screen_height - window_height) / 2)
+        x = x if x is not None else int((screen_width - window_width) / 2)
+        y = y if y is not None else int((screen_height - window_height) / 2)
 
         self.setGeometry(x, y, window_width, window_height)
 
@@ -79,16 +80,18 @@ class MyWidget(QWidget):
         layout.addWidget(self.list_widget)
         self.setLayout(layout)
 
-        data = self.get_data()
-        for item_text in data:
-            item = QListWidgetItem(item_text)
-            item.setTextAlignment(Qt.AlignCenter)
-            self.list_widget.addItem(item)
-
         self.list_widget.installEventFilter(self)
-        self.list_widget.viewport().installEventFilter(self)  # 添加这一行
+        self.list_widget.viewport().installEventFilter(self)
 
-        self.list_widget.setCurrentRow(0)
+    def populate_list(self, items):
+        if items:
+            for item_text in items:
+                item = QListWidgetItem(item_text)
+                item.setTextAlignment(Qt.AlignCenter)
+                self.list_widget.addItem(item)
+        
+        if self.list_widget.count() > 0:
+            self.list_widget.setCurrentRow(0)
 
     def eventFilter(self, source, event):
         if event.type() == QEvent.MouseButtonPress:
@@ -130,17 +133,37 @@ class MyWidget(QWidget):
             print(selected_text)
             QApplication.quit()
 
-    def get_data(self):
-        data = []
-        if len(sys.argv) > 1:
-            for arg in sys.argv[1:]:
-                data.extend(arg.splitlines())
+def parse_args():
+    args = sys.argv[1:]
+    x, y, width, height = None, None, None, None
+    items = []
+    i = 0
+    while i < len(args):
+        if args[i] == '-x' and i + 1 < len(args):
+            x = int(args[i + 1])
+            i += 2
+        elif args[i] == '-y' and i + 1 < len(args):
+            y = int(args[i + 1])
+            i += 2
+        elif args[i] == '-width' and i + 1 < len(args):
+            width = int(args[i + 1])
+            i += 2
+        elif args[i] == '-height' and i + 1 < len(args):
+            height = int(args[i + 1])
+            i += 2
         else:
-            data = sys.stdin.read().splitlines()
-        return data
+            items.append(args[i])
+            i += 1
+    return x, y, width, height, items
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    widget = MyWidget()
+
+    x, y, width, height, items = parse_args()
+
+    if not items:
+        items = sys.stdin.read().splitlines()
+
+    widget = MyWidget(x, y, width, height, items)
     widget.show()
     sys.exit(app.exec_())
