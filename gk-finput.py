@@ -68,8 +68,9 @@ class EmacsLineEdit(QLineEdit):
         self.cut()
 
 class FloatingInputWindow(QWidget):
-    def __init__(self, width, height, x, y, bg_color, font_color, font_size, font_family, keep_open):
+    def __init__(self, title, width, height, x, y, bg_color, font_color, font_size, font_family, keep_open):
         super().__init__()
+        self.setWindowTitle(title)
         self.width = width
         self.height = height
         self.x = x
@@ -144,6 +145,7 @@ class FloatingInputWindow(QWidget):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Customizable Floating Search Window")
+    parser.add_argument("--title", default="gk-finput", help="Window title")
     parser.add_argument("--width", type=int, default=1000, help="Width of the search window")
     parser.add_argument("--height", type=int, default=50, help="Height of the search window")
     parser.add_argument("--x", type=int, default=None, help="X position of the search window")
@@ -159,6 +161,7 @@ if __name__ == '__main__':
     args = parse_arguments()
     app = QApplication(sys.argv)
     mainWin = FloatingInputWindow(
+        title=args.title,
         width=args.width,
         height=args.height,
         x=args.x,
