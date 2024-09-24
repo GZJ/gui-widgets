@@ -135,7 +135,7 @@ class MyWidget(QWidget):
 
 def parse_args():
     args = sys.argv[1:]
-    x, y, width, height = None, None, None, None
+    x, y, width, height, title = None, None, None, None, None
     items = []
     i = 0
     while i < len(args):
