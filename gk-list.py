@@ -47,22 +47,23 @@ class MyWidget(QWidget):
         }
 
         QListWidget QScrollBar {
-            background : black;
+            background: black;
             color: green;
         }
-        QListWidget QScrollBar:vertical {
+        QListWidget QScrollBar:vertical, QListWidget QScrollBar:horizontal {
             background-color: green;
         }
-        QListWidget QScrollBar::handle:vertical {
+        QListWidget QScrollBar::handle:vertical, QListWidget QScrollBar::handle:horizontal {
             background-color: green;
         }
-        QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+        QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical,
+        QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
             background: none;
         }
-        QScrollBar::sub-page:vertical {
+        QScrollBar::sub-page:vertical, QScrollBar::sub-page:horizontal {
             background: black;
         }
-        QScrollBar::add-page:vertical {
+        QScrollBar::add-page:vertical, QScrollBar::add-page:horizontal {
             background: black;
         }
 
