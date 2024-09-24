@@ -67,8 +67,8 @@ class EmacsLineEdit(QLineEdit):
         self.setSelection(self.cursorPosition(), end)
         self.cut()
 
-class FloatingSearchWindow(QWidget):
-    def __init__(self, width, height, x, y, bg_color, font_color, font_size, font_family):
+class FloatingInputWindow(QWidget):
+    def __init__(self, width, height, x, y, bg_color, font_color, font_size, font_family, keep_open):
         super().__init__()
         self.width = width
         self.height = height
@@ -78,6 +78,7 @@ class FloatingSearchWindow(QWidget):
         self.font_color = font_color
         self.font_size = font_size
         self.font_family = font_family
+        self.keep_open = keep_open
         self.initUI()
 
     def initUI(self):
@@ -129,12 +130,17 @@ class FloatingSearchWindow(QWidget):
         return super().eventFilter(obj, event)
 
     def focusOutEvent(self, event: QFocusEvent) -> None:
-        self.close()
+        if not self.keep_open:
+            self.close()
         super().focusOutEvent(event)
 
     def return_selection(self, text):
-        print(f"{text}")
-        self.close()
+        print(f"{text}", flush=True)
+        if not self.keep_open:
+            self.close()
+        else:
+            self.search_input.clear()
+            self.search_input.setFocus()
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Customizable Floating Search Window")
@@ -146,12 +152,13 @@ def parse_arguments():
     parser.add_argument("--font-color", default="#00ff00", help="Font color of the search text")
     parser.add_argument("--font-size", type=int, default=16, help="Font size of the search text")
     parser.add_argument("--font-family", default="Arial", help="Font family of the search text")
+    parser.add_argument("-k", "--keep-open", action="store_true", help="Keep the window open after selection")
     return parser.parse_args()
 
 if __name__ == '__main__':
     args = parse_arguments()
     app = QApplication(sys.argv)
-    mainWin = FloatingSearchWindow(
+    mainWin = FloatingInputWindow(
         width=args.width,
         height=args.height,
         x=args.x,
@@ -159,7 +166,8 @@ if __name__ == '__main__':
         bg_color=args.bg_color,
         font_color=args.font_color,
         font_size=args.font_size,
-        font_family=args.font_family
+        font_family=args.font_family,
+        keep_open=args.keep_open
     )
     mainWin.show()
     sys.exit(app.exec_())

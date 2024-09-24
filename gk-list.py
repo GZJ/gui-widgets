@@ -3,10 +3,11 @@ from PyQt5.QtCore import Qt, QEvent, QPoint
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QListWidget, QFrame, QListWidgetItem, QDesktopWidget
 
 class MyWidget(QWidget):
-    def __init__(self, x=None, y=None, width=None, height=None, items=None, title=None):
+    def __init__(self, x=None, y=None, width=None, height=None, items=None, title=None, keep_open=False):
         super().__init__()
         self.initUI(x, y, width, height, title)
         self.populate_list(items)
+        self.keep_open = keep_open
 
         self.dragging = False
         self.offset = QPoint()
@@ -130,13 +131,15 @@ class MyWidget(QWidget):
         selected_item = self.list_widget.currentItem()
         if selected_item:
             selected_text = selected_item.text()
-            print(selected_text)
-            QApplication.quit()
+            print(selected_text, flush=True)
+            if not self.keep_open:
+                QApplication.quit()
 
 def parse_args():
     args = sys.argv[1:]
     x, y, width, height, title = None, None, None, None, None
     items = []
+    keep_open = False
     i = 0
     while i < len(args):
         if args[i] == '-x' and i + 1 < len(args):
@@ -154,19 +157,22 @@ def parse_args():
         elif args[i] == '-title' and i + 1 < len(args):
             title = args[i + 1]
             i += 2
+        elif args[i] in ['-k', '--keep-open']:
+            keep_open = True
+            i += 1
         else:
             items.append(args[i])
             i += 1
-    return x, y, width, height, title, items
+    return x, y, width, height, title, keep_open, items
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
 
-    x, y, width, height, title, items = parse_args()
+    x, y, width, height, title, keep_open, items = parse_args()
 
     if not items:
         items = sys.stdin.read().splitlines()
 
-    widget = MyWidget(x, y, width, height, items, title)
+    widget = MyWidget(x, y, width, height, items, title, keep_open)
     widget.show()
     sys.exit(app.exec_())
