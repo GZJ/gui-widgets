@@ -3,16 +3,16 @@ from PyQt5.QtCore import Qt, QEvent, QPoint
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QListWidget, QFrame, QListWidgetItem, QDesktopWidget
 
 class MyWidget(QWidget):
-    def __init__(self, x=None, y=None, width=None, height=None, items=None):
+    def __init__(self, x=None, y=None, width=None, height=None, items=None, title=None):
         super().__init__()
-        self.initUI(x, y, width, height)
+        self.initUI(x, y, width, height, title)
         self.populate_list(items)
 
         self.dragging = False
         self.offset = QPoint()
 
-    def initUI(self, x=None, y=None, width=None, height=None):
-        self.setWindowTitle("gk-list") 
+    def initUI(self, x=None, y=None, width=None, height=None, title=None):
+        self.setWindowTitle(title if title else "gk-list")
         self.setWindowFlags(Qt.FramelessWindowHint)
 
         desktop = QDesktopWidget()
@@ -151,19 +151,22 @@ def parse_args():
         elif args[i] == '-height' and i + 1 < len(args):
             height = int(args[i + 1])
             i += 2
+        elif args[i] == '-title' and i + 1 < len(args):
+            title = args[i + 1]
+            i += 2
         else:
             items.append(args[i])
             i += 1
-    return x, y, width, height, items
+    return x, y, width, height, title, items
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
 
-    x, y, width, height, items = parse_args()
+    x, y, width, height, title, items = parse_args()
 
     if not items:
         items = sys.stdin.read().splitlines()
 
-    widget = MyWidget(x, y, width, height, items)
+    widget = MyWidget(x, y, width, height, items, title)
     widget.show()
     sys.exit(app.exec_())
