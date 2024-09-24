@@ -100,6 +100,9 @@ class MyWidget(QWidget):
             if event.button() == Qt.LeftButton:
                 self.dragging = True
                 self.offset = event.pos()
+        elif event.type() == QEvent.MouseButtonDblClick:
+            if event.button() == Qt.LeftButton:
+                self.handle_enter()
         elif event.type() == QEvent.MouseMove:
             if self.dragging:
                 self.move(self.mapToParent(event.pos() - self.offset))
