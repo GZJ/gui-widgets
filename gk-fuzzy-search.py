@@ -271,13 +271,17 @@ def main():
     parser.add_argument('--list-bg', type=str, default='#000000', help='Background color of the list')
     parser.add_argument('--list-fg', type=str, default='#29a329', help='Foreground color of the list')
     parser.add_argument('--keep', action='store_true', help='Keep the program running after selection')
-    parser.add_argument('--items', type=str, required=True, help='Comma-separated list of items')
-
+    parser.add_argument('--items', type=str, help='Comma-separated list of items')
 
     args = parser.parse_args()
 
-
-    items_list = list(csv.reader(io.StringIO(args.items)))[0]
+    if args.items:
+        items_list = list(csv.reader(io.StringIO(args.items)))[0]
+    else:
+        if sys.stdin.isatty():
+            print("Error: No items provided. Please use --items or pipe in a list of items.", file=sys.stderr)
+            sys.exit(1)
+        items_list = [line.strip() for line in sys.stdin]
 
     app = QApplication(sys.argv)
 
