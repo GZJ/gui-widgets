@@ -8,6 +8,6 @@ setup(
     author_email='gzj00@outlook.com',
     url='https://github.com/gzj/gui-widgets',
     packages=find_packages(where='.', include=['*'], exclude=['*.*']),
-    scripts=['gk-list.py', 'gk-finput.py', 'gk-fuzzy-search'],
+    scripts=['gk-list.py', 'gk-finput.py', 'gk-fuzzy-search.py'],
     install_requires=['PyQt5'],
 )
