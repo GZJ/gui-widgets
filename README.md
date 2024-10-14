@@ -7,6 +7,7 @@
 To install `gui-widgets`, use the following command:
 
 ```
+pip uninstall gui-widgets
 pip install --user git+https://github.com/gzj/gui-widgets.git
 ```
 
