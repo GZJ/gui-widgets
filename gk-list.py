@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtCore import Qt, QEvent, QPoint
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QListWidget, QFrame, QListWidgetItem, QDesktopWidget
 
-class MyWidget(QWidget):
+class GkList(QWidget):
     def __init__(self, x=None, y=None, width=None, height=None, items=None, title=None, keep_open=False):
         super().__init__()
         self.initUI(x, y, width, height, title)
@@ -177,6 +177,6 @@ if __name__ == '__main__':
     if not items:
         items = sys.stdin.read().splitlines()
 
-    widget = MyWidget(x, y, width, height, items, title, keep_open)
+    widget = GkList(x, y, width, height, items, title, keep_open)
     widget.show()
     sys.exit(app.exec_())
